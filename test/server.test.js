@@ -43,7 +43,11 @@ describe('POST /api/activity', () => {
                 if(err){
                     return done(err);
                 }
-                done();
+
+                activitymodel.find().then((results) => {
+                    expect(results.length).toBe(0);
+                    done();
+                }).catch((err) => done(err));
             });
     });
 
