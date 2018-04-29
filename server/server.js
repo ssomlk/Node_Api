@@ -34,3 +34,5 @@ app.post('/api/activity', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is up and running on port: ${PORT}`)
 });
+
+module.exports = { app };
