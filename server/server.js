@@ -14,22 +14,6 @@ var app = express();
 
 app.use(bodyParser.json());
 
-// app.post('/api/activity', (req, res) => {
-//
-//     //Create the actual activity model instance
-//     var newactivity = new activitymodel({
-//         text:req.body.text,
-//         completed: req.body.completed
-//     });
-//
-//     //save the activity instance data to the document-tblactivities
-//     newactivity.save().then((doc) => {
-//         res.status(201).send(doc);
-//     }, (err) => {
-//         res.status(400).send(err);
-//     });
-//});
-
 var connectionOpen = async () =>{
     try{
         var result = await connectToDatabase();
@@ -48,8 +32,25 @@ var connectionClose = async () =>{
     }
 };
 
-connectionOpen();
-connectionClose();
+app.post('/api/activity', (req, res) => {
+
+    //Create the actual activity model instance
+    var newactivity = new activitymodel({
+        text:req.body.text,
+        completed: req.body.completed
+    });
+
+    connectionOpen();
+
+    //save the activity instance data to the document-tblactivities
+    newactivity.save().then((doc) => {
+        res.status(201).send(doc);
+        connectionClose();
+    }, (err) => {
+        res.status(400).send(err);
+        connectionClose();
+    });
+});
 
 app.listen(PORT, () => {
     console.log(`Server is up and running on port: ${PORT}`);
